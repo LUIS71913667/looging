@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SqlClient;
+
 
 namespace Loging0._1
 {
@@ -17,6 +19,8 @@ namespace Loging0._1
         {
             InitializeComponent();
         }
+
+        SqlConnection conexion = new SqlConnection("server=DESKTOP-7LDGQBD");
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -30,9 +34,23 @@ namespace Loging0._1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string nombre, contraseña;
-            nombre = user.Text;
-            contraseña = pass.Text;
+            conexion.Open();
+            String consulta = "select * from usuario where usuario='"+textBox1.Text+"' and contraseña='"+textBox2.Text+"'";
+            SqlCommand comando = new SqlCommand(consulta,conexion);
+            SqlDataReader lector; 
+            lector = comando.ExecuteReader();
+
+            if (lector.HasRows == true) 
+            {
+                Form2 frmbienvenido = new Form2();
+                this.Hide();
+                frmbienvenido.Show();
+            }
+            else {
+                
+                MessageBox.Show("Usuario o contraseña incorrectos");
+            }
+            conexion.Close();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
